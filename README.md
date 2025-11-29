@@ -11,6 +11,31 @@ A powerful API to aggregate torrent search results from multiple providers.
 - Caching for faster responses.
 - Easy to extend with new providers.
 
+## Provider Status
+
+Check the live status of all providers at: [https://aggregatorapi.shalmon.site/status](https://aggregatorapi.shalmon.site/status)
+
+| Provider | Status | Results | Latency |
+|----------|--------|---------|---------|
+<!-- STATUS_TABLE_START -->
+| 1337x | ❌ | - | - |
+| Bitsearch | ❌ | 0 | 619ms |
+| Ettv | ❌ | 0 | 359ms |
+| Eztv | ❌ | 0 | 620ms |
+| Glodls | ❌ | 0 | 914ms |
+| Kickass | ❌ | 0 | 606ms |
+| Limetorrents | ❌ | 0 | 604ms |
+| Magnetdl | ❌ | 0 | 55ms |
+| Nyaasi | ✅ | 1 | 616ms |
+| Piratebay | ✅ | 30 | 1047ms |
+| Rarbg | ❌ | 0 | 658ms |
+| Torlock | ❌ | - | - |
+| Torrentfunk | ❌ | 0 | 388ms |
+| Torrentgalaxy | ❌ | 0 | 43ms |
+| Torrentproject | ❌ | 0 | 597ms |
+| Zooqle | ❌ | 0 | 598ms |
+<!-- STATUS_TABLE_END -->
+
 ## Getting Started
 
 ### Prerequisites
