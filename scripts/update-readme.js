@@ -33,6 +33,8 @@ const generateTable = (statusData) => {
     // Sort providers by name for consistency
     providers.sort((a, b) => a.name.localeCompare(b.name));
 
+    const header = '| Provider | Status | Results | Latency |\n|----------|--------|---------|---------|';
+
     const rows = providers.map(provider => {
         const statusIcon = provider.status === 'working' ? '✅' : '❌';
         const displayName = provider.name.charAt(0).toUpperCase() + provider.name.slice(1);
@@ -42,7 +44,7 @@ const generateTable = (statusData) => {
         return `| ${displayName} | ${statusIcon} | ${results} | ${latency} |`;
     });
 
-    return rows.join('\n');
+    return `${header}\n${rows.join('\n')}`;
 };
 
 const updateReadme = async () => {

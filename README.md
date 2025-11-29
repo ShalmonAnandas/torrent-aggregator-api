@@ -15,25 +15,25 @@ A powerful API to aggregate torrent search results from multiple providers.
 
 Check the live status of all providers at: [https://aggregatorapi.shalmon.site/status](https://aggregatorapi.shalmon.site/status)
 
+<!-- STATUS_TABLE_START -->
 | Provider | Status | Results | Latency |
 |----------|--------|---------|---------|
-<!-- STATUS_TABLE_START -->
-| 1337x | ❌ | - | - |
-| Bitsearch | ❌ | 0 | 619ms |
-| Ettv | ❌ | 0 | 359ms |
-| Eztv | ❌ | 0 | 620ms |
-| Glodls | ❌ | 0 | 914ms |
-| Kickass | ❌ | 0 | 606ms |
-| Limetorrents | ❌ | 0 | 604ms |
-| Magnetdl | ❌ | 0 | 55ms |
-| Nyaasi | ✅ | 1 | 616ms |
-| Piratebay | ✅ | 30 | 1047ms |
-| Rarbg | ❌ | 0 | 658ms |
+| 1337x | ❌ | 0 | 167ms |
+| Bitsearch | ❌ | 0 | 136ms |
+| Ettv | ❌ | 0 | 116ms |
+| Eztv | ❌ | 0 | 131ms |
+| Glodls | ❌ | 0 | 3212ms |
+| Kickass | ❌ | 0 | 90ms |
+| Limetorrents | ❌ | 0 | 93ms |
+| Magnetdl | ❌ | 0 | 29ms |
+| Nyaasi | ✅ | 1 | 319ms |
+| Piratebay | ✅ | 30 | 458ms |
+| Rarbg | ❌ | 0 | 91ms |
 | Torlock | ❌ | - | - |
-| Torrentfunk | ❌ | 0 | 388ms |
-| Torrentgalaxy | ❌ | 0 | 43ms |
-| Torrentproject | ❌ | 0 | 597ms |
-| Zooqle | ❌ | 0 | 598ms |
+| Torrentfunk | ❌ | 0 | 95ms |
+| Torrentgalaxy | ❌ | 0 | 44ms |
+| Torrentproject | ❌ | 0 | 122ms |
+| Zooqle | ❌ | 0 | 120ms |
 <!-- STATUS_TABLE_END -->
 
 ## Getting Started
