@@ -1,0 +1,126 @@
+{
+    "info": {
+        "_postman_id": "d6cba9d8-9aed-4476-88f2-493c6d925e29",
+        "name": "Torrent Aggregator API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Global Search",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:3000/?query=ubuntu",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000",
+                    "path": [
+                        ""
+                    ],
+                    "query": [
+                        {
+                            "key": "query",
+                            "value": "ubuntu"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "List Providers",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:3000/providers",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000",
+                    "path": [
+                        "providers"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Search Specific Provider",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:3000/providers/1337x?query=ubuntu",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000",
+                    "path": [
+                        "providers",
+                        "1337x"
+                    ],
+                    "query": [
+                        {
+                            "key": "query",
+                            "value": "ubuntu"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Custom Search (POST)",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"query\": \"ubuntu\",\n    \"providers\": [\"1337x\", \"eztv\"]\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:3000/search",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000",
+                    "path": [
+                        "search"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Check Provider Status",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:3000/status",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000",
+                    "path": [
+                        "status"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ]
+}

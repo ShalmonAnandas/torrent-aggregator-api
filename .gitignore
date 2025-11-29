@@ -140,9 +140,10 @@ web_modules/
 .svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node
-package-lock.json
+# package-lock.json
 .vscode
 torrent
 .DS_Store
 .vercel
 dist
+out/
