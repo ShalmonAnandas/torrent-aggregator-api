@@ -18,22 +18,22 @@ Check the live status of all providers at: [https://aggregatorapi.shalmon.site/s
 <!-- STATUS_TABLE_START -->
 | Provider | Status | Results | Latency |
 |----------|--------|---------|---------|
-| 1337x | ❌ | 0 | 516ms |
-| Bitsearch | ❌ | 0 | 142ms |
-| Ettv | ❌ | 0 | 235ms |
-| Eztv | ❌ | 0 | 143ms |
-| Glodls | ❌ | 0 | 1198ms |
-| Kickass | ❌ | 0 | 232ms |
-| Limetorrents | ❌ | 0 | 288ms |
-| Magnetdl | ❌ | 0 | 26ms |
-| Nyaasi | ✅ | 1 | 535ms |
-| Piratebay | ✅ | 30 | 665ms |
-| Rarbg | ❌ | 0 | 340ms |
-| Torlock | ❌ | - | - |
-| Torrentfunk | ❌ | 0 | 348ms |
-| Torrentgalaxy | ❌ | 0 | 323ms |
-| Torrentproject | ❌ | 0 | 386ms |
-| Zooqle | ❌ | 0 | 414ms |
+| 1337x | ❌ | 0 | 210ms |
+| Bitsearch | ❌ | 0 | 174ms |
+| Ettv | ❌ | 0 | 172ms |
+| Eztv | ❌ | 0 | 172ms |
+| Glodls | ❌ | 0 | 1024ms |
+| Kickass | ❌ | 0 | 149ms |
+| Limetorrents | ❌ | 0 | 189ms |
+| Magnetdl | ❌ | 0 | 75ms |
+| Nyaasi | ✅ | 1 | 456ms |
+| Piratebay | ✅ | 30 | 671ms |
+| Rarbg | ❌ | 0 | 200ms |
+| Torlock | ❌ | 0 | 1474ms |
+| Torrentfunk | ❌ | 0 | 205ms |
+| Torrentgalaxy | ❌ | 0 | 200ms |
+| Torrentproject | ❌ | 0 | 234ms |
+| Zooqle | ❌ | 0 | 237ms |
 <!-- STATUS_TABLE_END -->
 
 ## Getting Started
