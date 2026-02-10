@@ -2,6 +2,20 @@ import { providersMap, getProvider } from "../providers";
 import Torrent from "../types";
 import { TIMEOUT } from "../config/constants";
 
+const DEFAULT_HEALTH_QUERY = "ubuntu";
+
+const PROVIDER_HEALTH_CHECKS: Record<
+    string,
+    { query?: string; page?: string; status?: "retired" }
+> = {
+    ettv: { query: "breaking bad" },
+    eztv: { query: "breaking bad" },
+    nyaasi: { query: "one piece" },
+    rarbg: { status: "retired" },
+    torrentgalaxy: { page: "0" },
+    torrentproject: { page: "0" },
+};
+
 const executeProviders = async (
     providerFunctions: ((query: string, page?: string) => Promise<Torrent[]>)[],
     query: string,
@@ -55,10 +69,19 @@ export const searchSelectedProviders = async (
 export const checkProvidersHealth = async () => {
     const results = await Promise.allSettled(
         Object.entries(providersMap).map(async ([name, provider]) => {
+            const healthConfig = PROVIDER_HEALTH_CHECKS[name] ?? {};
+            if (healthConfig.status === "retired") {
+                return {
+                    name,
+                    status: "retired",
+                };
+            }
             try {
                 const start = Date.now();
+                const query = healthConfig.query ?? DEFAULT_HEALTH_QUERY;
+                const page = healthConfig.page;
                 const result = await Promise.race([
-                    provider("ubuntu", "1"),
+                    provider(query, page),
                     new Promise<Torrent[]>((_, reject) =>
                         setTimeout(() => reject(new Error("Timeout")), TIMEOUT)
                     ),
