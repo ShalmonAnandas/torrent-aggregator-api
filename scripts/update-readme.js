@@ -26,9 +26,15 @@ const fetchStatus = () => {
 };
 
 const generateTable = (statusData) => {
-    // statusData is expected to be { data: [ { name: '...', status: 'working'|'failed', results: 0, latency: 0 }, ... ] }
+    // statusData is expected to be { data: [ { name: '...', status: 'working'|'zero_results'|'failed'|'retired', results: 0, latency: 0 }, ... ] }
 
     const providers = statusData.data || [];
+    const statusIcons = {
+        working: '✅',
+        zero_results: '⚠️',
+        failed: '❌',
+        retired: '⚪',
+    };
 
     // Sort providers by name for consistency
     providers.sort((a, b) => a.name.localeCompare(b.name));
@@ -36,7 +42,7 @@ const generateTable = (statusData) => {
     const header = '| Provider | Status | Results | Latency |\n|----------|--------|---------|---------|';
 
     const rows = providers.map(provider => {
-        const statusIcon = provider.status === 'working' ? '✅' : '❌';
+        const statusIcon = statusIcons[provider.status] || '❌';
         const displayName = provider.name.charAt(0).toUpperCase() + provider.name.slice(1);
         const results = provider.results !== undefined ? provider.results : '-';
         const latency = provider.latency !== undefined ? `${provider.latency}ms` : '-';
