@@ -26,7 +26,7 @@ const fetchStatus = () => {
 };
 
 const generateTable = (statusData) => {
-    // statusData is expected to be { data: [ { name: '...', status: 'working'|'failed', results: 0, latency: 0 }, ... ] }
+    // statusData is expected to be { data: [ { name: '...', status: 'working'|'zero_results'|'failed'|'retired', results: 0, latency: 0 }, ... ] }
 
     const providers = statusData.data || [];
     const statusIcons = {

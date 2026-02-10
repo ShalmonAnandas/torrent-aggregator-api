@@ -74,6 +74,8 @@ export const checkProvidersHealth = async () => {
                 return {
                     name,
                     status: "retired",
+                    results: 0,
+                    latency: 0,
                 };
             }
             try {
