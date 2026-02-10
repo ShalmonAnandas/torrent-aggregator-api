@@ -3,48 +3,44 @@ import { load } from "cheerio";
 import Torrent from "../types";
 import { USER_AGENT } from "../config/constants";
 
+const BASE_URL = "https://zooqle.com";
+
 export const zooqle = async (query = "", page = "1"): Promise<Torrent[]> => {
     const torrents: Torrent[] = [];
-    const url = "https://zooqle.com/search?pg=" + page + "&q=" + query;
-    const options = {
-        method: "GET",
-        url,
-        headers: {
-            "User-Agent": USER_AGENT,
-        },
-    };
+    const url = `${BASE_URL}/search?pg=${page}&q=${encodeURIComponent(query)}`;
     let html;
     try {
-        html = await axios.request(options);
+        html = await axios.get(url, {
+            headers: { "User-Agent": USER_AGENT },
+            timeout: 10000,
+        });
     } catch (err) {
         return [];
     }
     const $ = load(html.data);
 
     $("tbody tr").each((_, element) => {
-        const seeders_leechers =
-            $(element).find("td").eq(5).find("div").attr("title") ||
-            "0|0".trim().split("|");
-        const seeders = seeders_leechers[0].replace("Seeders:", "").trim();
-        const leechers = seeders_leechers[1].replace("Leechers:", "").trim();
+        const tds = $(element).find("td");
+        const name = tds.eq(1).find("a").text().trim();
+        if (!name) return;
+
+        const divTitle = tds.eq(5).find("div").attr("title") || "";
+        let seeders = 0;
+        let leechers = 0;
+        if (divTitle) {
+            const parts = divTitle.split("|");
+            seeders = Number((parts[0] || "").replace(/[^0-9]/g, "")) || 0;
+            leechers = Number((parts[1] || "").replace(/[^0-9]/g, "")) || 0;
+        }
 
         const torrent: Torrent = {
-            name: $(element).find("td").eq(1).find("a").text().trim(),
-            size: $(element).find("td").eq(3).find("div div").text().trim(),
-            dateUploaded: $(element).find("td").eq(4).text().trim(),
-            seeders: Number(seeders),
-            leechers: Number(leechers),
-            url:
-                "https://zooqle.com" +
-                $(element).find("td").eq(1).find("a").attr("href"),
-            magnet: $(element)
-                .find("td")
-                .eq(2)
-                .find("ul")
-                .find("li")
-                .eq(1)
-                .find("a")
-                .attr("href"),
+            name,
+            size: tds.eq(3).find("div div").text().trim(),
+            dateUploaded: tds.eq(4).text().trim(),
+            seeders,
+            leechers,
+            url: BASE_URL + (tds.eq(1).find("a").attr("href") || ""),
+            magnet: tds.eq(2).find("ul li").eq(1).find("a").attr("href"),
         };
         torrents.push(torrent);
     });

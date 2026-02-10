@@ -3,20 +3,16 @@ import { load } from "cheerio";
 import Torrent from "../types";
 import { USER_AGENT } from "../config/constants";
 
+const BASE_URL = "https://www.torlock.com";
+
 export const torLock = async (query = "", page = "1"): Promise<Torrent[]> => {
     const torrents: Torrent[] = [];
-    const allUrls: string[] = [];
-    const url = encodeURI(
-        "https://www.torlock.com/all/torrents/" + query + "/" + page + ".html"
-    );
+    const url = encodeURI(`${BASE_URL}/all/torrents/${query}/${page}.html`);
     let html;
     try {
         html = await axios.get(url, {
-            headers: {
-                "User-Agent": USER_AGENT,
-            },
-            // @ts-ignore
-            family: 4 as 4,
+            headers: { "User-Agent": USER_AGENT },
+            timeout: 10000,
         });
     } catch (error) {
         return [];
@@ -24,57 +20,25 @@ export const torLock = async (query = "", page = "1"): Promise<Torrent[]> => {
 
     const $ = load(html.data);
 
-    $(".table tbody tr").each((i, element) => {
-        if (i > 3) {
-            const url =
-                "https://www.torlock.com" +
-                $(element).find("td").eq(0).find("div a").attr("href");
-            allUrls.push(url);
-            const torrent: Torrent = {
-                name: $(element).find("td").eq(0).find("div a b").text().trim(),
-                size: $(element).find("td").eq(2).text().trim(),
-                dateUploaded: $(element).find("td").eq(1).text().trim(),
-                seeders: Number($(element).find("td").eq(3).text().trim()),
-                leechers: Number($(element).find("td").eq(4).text().trim()),
-                url,
-            };
-            if (torrent.name !== "") {
-                torrents.push(torrent);
-            }
-        }
-    });
+    $("table tbody tr, .table tbody tr").each((_, element) => {
+        const nameLink = $(element).find("td").eq(0).find("a, div a");
+        const name = nameLink.find("b").text().trim() || nameLink.text().trim();
+        if (!name) return;
 
-    await Promise.all(
-        allUrls.map(async (url) => {
-            for (let i = 0; i < torrents.length; i++) {
-                if (torrents[i]["url"] === url) {
-                    const options = {
-                        method: "GET",
-                        url,
-                        headers: {
-                            "User-Agent": USER_AGENT,
-                        },
-                        // @ts-ignore
-                        family: 4 as 4,
-                    };
-                    let html;
-                    try {
-                        html = await axios.request(options);
-                    } catch (err) {
-                        return [];
-                    }
-                    const $ = load(html.data);
-                    torrents[i].torrentLink =
-                        $(
-                            "body > article > div:nth-child(6) > div > div:nth-child(2) > a"
-                        ).attr("href") || "";
-                    torrents[i].magnet = $(
-                        "body > article > table:nth-child(5) > thead > tr > th > div:nth-child(2) > h4 > a:nth-child(1)"
-                    ).attr("href");
-                }
-            }
-        })
-    );
+        const href = nameLink.attr("href");
+        const torrentUrl = href ? BASE_URL + href : "";
+        const tds = $(element).find("td");
+
+        const torrent: Torrent = {
+            name,
+            size: tds.eq(2).text().trim(),
+            dateUploaded: tds.eq(1).text().trim(),
+            seeders: Number(tds.eq(3).text().trim()) || 0,
+            leechers: Number(tds.eq(4).text().trim()) || 0,
+            url: torrentUrl,
+        };
+        torrents.push(torrent);
+    });
 
     return torrents;
 };
