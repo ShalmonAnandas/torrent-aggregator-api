@@ -18,22 +18,22 @@ Check the live status of all providers at: [https://aggregatorapi.shalmon.site/s
 <!-- STATUS_TABLE_START -->
 | Provider | Status | Results | Latency |
 |----------|--------|---------|---------|
-| 1337x | ❌ | 0 | 186ms |
-| Bitsearch | ❌ | 0 | 169ms |
-| Ettv | ❌ | 0 | 128ms |
-| Eztv | ❌ | 0 | 165ms |
-| Glodls | ❌ | 0 | 763ms |
-| Kickass | ❌ | 0 | 124ms |
-| Limetorrents | ❌ | 0 | 129ms |
-| Magnetdl | ❌ | 0 | 49ms |
-| Nyaasi | ✅ | 1 | 362ms |
-| Piratebay | ✅ | 30 | 483ms |
-| Rarbg | ❌ | 0 | 151ms |
+| 1337x | ❌ | 0 | 167ms |
+| Bitsearch | ❌ | 0 | 148ms |
+| Ettv | ❌ | 0 | 137ms |
+| Eztv | ❌ | 0 | 145ms |
+| Glodls | ❌ | 0 | 715ms |
+| Kickass | ❌ | 0 | 190ms |
+| Limetorrents | ❌ | 0 | 153ms |
+| Magnetdl | ❌ | 0 | 135ms |
+| Nyaasi | ✅ | 1 | 399ms |
+| Piratebay | ❌ | 0 | 140ms |
+| Rarbg | ❌ | 0 | 19ms |
 | Torlock | ❌ | - | - |
-| Torrentfunk | ❌ | 0 | 157ms |
-| Torrentgalaxy | ❌ | 0 | 93ms |
-| Torrentproject | ❌ | 0 | 148ms |
-| Zooqle | ❌ | 0 | 146ms |
+| Torrentfunk | ❌ | 0 | 133ms |
+| Torrentgalaxy | ❌ | 0 | 110ms |
+| Torrentproject | ❌ | 0 | 773ms |
+| Zooqle | ❌ | 0 | 239ms |
 <!-- STATUS_TABLE_END -->
 
 ## Getting Started
