@@ -1,12 +1,18 @@
 import axios from "axios";
 import { load } from "cheerio";
 import Torrent from "../types";
+import { USER_AGENT } from "../config/constants";
+
+const BASE_URL = "https://1337x.to";
 
 export const torrent1337x = async (query: string, page = "1"): Promise<Torrent[]> => {
-    const url = `https://1337x.so/search/${query}/${page}/`;
+    const url = `${BASE_URL}/search/${encodeURIComponent(query)}/${page}/`;
     let html;
     try {
-        html = await axios.get(url);
+        html = await axios.get(url, {
+            headers: { "User-Agent": USER_AGENT },
+            timeout: 10000,
+        });
     } catch {
         return [];
     }
@@ -14,14 +20,16 @@ export const torrent1337x = async (query: string, page = "1"): Promise<Torrent[]
     const $ = load(html.data);
     const torrents: Torrent[] = [];
 
-    $("tbody tr").each((_, element) => {
-        const name = $(element).find("td.name a").eq(1).text().trim();
-        const url = "https://1337x.so" + $(element).find("td.name a").eq(1).attr("href");
+    $(".table-list tbody tr").each((_, element) => {
+        const nameLink = $(element).find("td.coll-1.name a").eq(1);
+        const name = nameLink.text().trim();
+        const href = nameLink.attr("href");
+        const url = href ? BASE_URL + href : "";
         const seeders = Number($(element).find("td.seeds").text().trim());
         const leechers = Number($(element).find("td.leeches").text().trim());
         const dateUploaded = $(element).find("td.coll-date").text().trim();
-        const size = $(element).find("td.size").clone().children().remove().end().text().trim();
-        const uploader = $(element).find("td.vip, td.user").text().trim();
+        const size = $(element).find("td.coll-4").clone().children().remove().end().text().trim();
+        const uploader = $(element).find("td.coll-5").text().trim();
 
         if (name) {
             torrents.push({
@@ -32,7 +40,6 @@ export const torrent1337x = async (query: string, page = "1"): Promise<Torrent[]
                 dateUploaded,
                 size,
                 uploadedBy: uploader,
-                // Magnet link is not available on the listing page, omitting for performance
                 magnet: "",
             });
         }

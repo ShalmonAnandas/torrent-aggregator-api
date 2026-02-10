@@ -1,55 +1,62 @@
 import axios from "axios";
-import { load } from "cheerio";
 import Torrent from "../types";
+import { USER_AGENT } from "../config/constants";
+
+const API_URL = "https://apibay.org";
 
 export const pirateBayTorrents = async (query: string, page: string = "1"): Promise<Torrent[]> => {
-    const url = `https://tpb.party/search/${query}/${page}/99/0`;
-    let html;
+    const url = `${API_URL}/q.php?q=${encodeURIComponent(query)}&cat=0`;
+    let response;
     try {
-        html = await axios.get(url, {
+        response = await axios.get(url, {
             headers: {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                "User-Agent": USER_AGENT,
             },
-            // @ts-ignore
-            family: 4,
+            timeout: 10000,
         });
     } catch (err) {
-        console.error("[piratebay] Error:", err);
         return [];
     }
-    const $ = load(html.data);
+
     const torrents: Torrent[] = [];
 
-    const items = $("table#searchResult tr");
+    if (!Array.isArray(response.data)) {
+        return [];
+    }
 
-    items.each((_, element) => {
-        // Skip header row
-        if ($(element).find("th").length > 0) return;
+    for (const item of response.data) {
+        // apibay returns {id: "0", name: "No results..."} when no results found
+        if (item.id === "0" || !item.name) continue;
 
-        const name = $(element).find("td").eq(1).find("a").text().trim();
-        if (name) {
-            const dateUploaded = $(element).find("td").eq(2).text().trim();
-            const magnet = $(element).find("td").eq(3).find("a[href^='magnet:']").attr("href");
-            const size = $(element).find("td").eq(4).text().trim();
-            const seeders = Number($(element).find("td").eq(5).text().trim()) || 0;
-            const leechers = Number($(element).find("td").eq(6).text().trim()) || 0;
-            const uploadedBy = $(element).find("td").eq(7).find("a").text().trim() || $(element).find("td").eq(7).text().trim();
-            const url = "https://tpb.party" + $(element).find("td").eq(1).find("a").attr("href");
-            const category = $(element).find("td").eq(0).text().trim();
+        const name = item.name;
+        const infoHash = item.info_hash;
+        const seeders = Number(item.seeders) || 0;
+        const leechers = Number(item.leechers) || 0;
+        const size = formatSize(Number(item.size) || 0);
+        const dateUploaded = item.added ? new Date(Number(item.added) * 1000).toISOString().split("T")[0] : "";
+        const uploadedBy = item.username || "";
+        const category = item.category || "";
+        const magnet = `magnet:?xt=urn:btih:${infoHash}&dn=${encodeURIComponent(name)}`;
 
-            torrents.push({
-                name,
-                size,
-                dateUploaded,
-                category,
-                seeders,
-                leechers,
-                uploadedBy,
-                url,
-                magnet,
-            });
-        }
-    });
+        torrents.push({
+            name,
+            size,
+            dateUploaded,
+            category,
+            seeders,
+            leechers,
+            uploadedBy,
+            url: `https://thepiratebay.org/description.php?id=${item.id}`,
+            magnet,
+        });
+    }
 
     return torrents;
 };
+
+function formatSize(bytes: number): string {
+    if (bytes === 0) return "0 B";
+    const units = ["B", "KB", "MB", "GB", "TB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return (bytes / Math.pow(1024, i)).toFixed(2) + " " + units[i];
+}

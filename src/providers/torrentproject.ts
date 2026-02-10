@@ -3,76 +3,43 @@ import { load } from "cheerio";
 import Torrent from "../types";
 import { USER_AGENT } from "../config/constants";
 
+const BASE_URL = "https://torrentproject.se";
+
 export const torrentProject = async (query: string, page = "0"): Promise<Torrent[]> => {
     const torrents: Torrent[] = [];
-    const allUrls: string[] = [];
-    const url = `https://torrentproject2.com/?t=${query}&p=${page}&orderby=seeders`;
-    const options = {
-        method: "GET",
-        url,
-        headers: {
-            "User-Agent": USER_AGENT,
-        },
-        // @ts-ignore
-        family: 4 as 4,
-    };
+    const url = `${BASE_URL}/?t=${encodeURIComponent(query)}&p=${page}&orderby=seeders`;
     let html;
     try {
-        html = await axios.request(options);
+        html = await axios.get(url, {
+            headers: { "User-Agent": USER_AGENT },
+            timeout: 10000,
+        });
     } catch (err) {
         return [];
     }
 
     const $ = load(html.data);
 
-    $(".tt div").each((i, element) => {
-        if (i > 1) {
-            const url =
-                "https://torrentproject2.com" +
-                $(element).find("span").eq(0).find("a").attr("href");
-            allUrls.push(url);
-            const torrent: Torrent = {
-                name: $(element).find("span:nth-child(1)").text().trim(),
-                size: $(element).find("span:nth-child(5)").text(),
-                dateUploaded: $(element).find("span:nth-child(4)").text().trim(),
-                seeders: Number($(element).find("span:nth-child(2)").text().trim()),
-                leechers: Number($(element).find("span:nth-child(3)").text().trim()),
-                url,
-            };
-            if (torrent.name !== "") {
-                torrents.push(torrent);
-            }
-        }
-    });
+    $(".tt div, #similarfiles div, table tr").each((i, element) => {
+        if (i < 2) return;
 
-    await Promise.all(
-        allUrls.map(async (url) => {
-            for (let i = 0; i < torrents.length; i++) {
-                if (torrents[i]["url"] === url) {
-                    const options = {
-                        method: "GET",
-                        url,
-                        headers: {
-                            "User-Agent": USER_AGENT,
-                        },
-                        // @ts-ignore
-                        family: 4 as 4,
-                    };
-                    let html;
-                    try {
-                        html = await axios.request(options);
-                    } catch (err) {
-                        return [];
-                    }
-                    const $ = load(html.data);
-                    let magnet = $(".usite a").attr("href") || "";
-                    const startMagnetIdx = magnet.indexOf("magnet");
-                    magnet = magnet.slice(startMagnetIdx);
-                    torrents[i].magnet = decodeURIComponent(magnet);
-                }
-            }
-        })
-    );
+        const nameEl = $(element).find("span").eq(0).find("a");
+        const name = nameEl.text().trim() || $(element).find("td").eq(0).find("a").text().trim();
+        if (!name) return;
+
+        const href = nameEl.attr("href") || $(element).find("td").eq(0).find("a").attr("href");
+        const torrentUrl = href ? BASE_URL + href : "";
+
+        const torrent: Torrent = {
+            name,
+            size: $(element).find("span:nth-child(5), td:nth-child(5)").text().trim(),
+            dateUploaded: $(element).find("span:nth-child(4), td:nth-child(4)").text().trim(),
+            seeders: Number($(element).find("span:nth-child(2), td:nth-child(2)").text().trim()) || 0,
+            leechers: Number($(element).find("span:nth-child(3), td:nth-child(3)").text().trim()) || 0,
+            url: torrentUrl,
+        };
+        torrents.push(torrent);
+    });
 
     return torrents;
 };

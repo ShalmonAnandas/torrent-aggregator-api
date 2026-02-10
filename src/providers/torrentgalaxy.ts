@@ -1,8 +1,9 @@
 import axios from "axios";
 import { load } from "cheerio";
 import Torrent from "../types";
-
 import { USER_AGENT } from "../config/constants";
+
+const BASE_URL = "https://torrentgalaxy.to";
 
 export const torrentGalaxy = async (query = "", page = "0"): Promise<Torrent[]> => {
     let currentPage: number = 0;
@@ -15,19 +16,12 @@ export const torrentGalaxy = async (query = "", page = "0"): Promise<Torrent[]> 
     }
 
     const allTorrents: Torrent[] = [];
-    const url =
-        "https://torrentgalaxy.to/torrents.php?search=" +
-        query +
-        "&sort=id&order=desc&page=" +
-        currentPage;
+    const url = `${BASE_URL}/torrents.php?search=${encodeURIComponent(query)}&sort=id&order=desc&page=${currentPage}`;
     let html;
     try {
         html = await axios.get(url, {
-            headers: {
-                "User-Agent": USER_AGENT,
-            },
-            // @ts-ignore
-            family: 4 as 4,
+            headers: { "User-Agent": USER_AGENT },
+            timeout: 10000,
         });
     } catch {
         return [];
@@ -37,27 +31,26 @@ export const torrentGalaxy = async (query = "", page = "0"): Promise<Torrent[]> 
 
     $("div.tgxtablerow.txlight").each((_, element) => {
         const torrent: Torrent = {};
-        torrent.name = $(element).find(":nth-child(4) div a b").text();
-        torrent.category = $(element).find(":nth-child(1) a small").text();
-        torrent.url =
-            "https://torrentgalaxy.to" + $(element).find("a.txlight").attr("href");
-        torrent.uploadedBy = $(element).find(":nth-child(7) span a span").text();
-        torrent.size = $(element).find(":nth-child(8)").text();
-        torrent.seeders = Number(
-            $(element).find(":nth-child(11) span font:nth-child(1)").text()
-        );
-        torrent.leechers = Number(
-            $(element).find(":nth-child(11) span font:nth-child(2)").text()
-        );
-        torrent.dateUploaded = $(element).find(":nth-child(12)").text();
-        torrent.torrentLink = $(element)
-            .find(".tgxtablecell.collapsehide.rounded.txlight a")
-            .attr("href");
-        torrent.magnet = $(element)
-            .find(".tgxtablecell.collapsehide.rounded.txlight a")
-            .next()
-            .attr("href");
-        allTorrents.push(torrent);
+        const cells = $(element).find("div.tgxtablecell");
+
+        torrent.name = $(element).find("a.txlight b, div:nth-child(4) a b").text().trim();
+        torrent.category = cells.eq(0).find("a small").text().trim();
+        const href = $(element).find("a.txlight").attr("href");
+        torrent.url = href ? BASE_URL + href : "";
+        torrent.uploadedBy = cells.eq(6).find("span a span").text().trim();
+        torrent.size = cells.eq(7).text().trim();
+        torrent.seeders = Number(cells.eq(10).find("span font:nth-child(1)").text().trim()) || 0;
+        torrent.leechers = Number(cells.eq(10).find("span font:nth-child(2)").text().trim()) || 0;
+        torrent.dateUploaded = cells.eq(11).text().trim();
+
+        // Get torrent download link and magnet
+        const downloadCell = $(element).find("div.tgxtablecell a[href$='.torrent']");
+        torrent.torrentLink = downloadCell.attr("href");
+        torrent.magnet = $(element).find("a[href^='magnet:']").attr("href");
+
+        if (torrent.name) {
+            allTorrents.push(torrent);
+        }
     });
     return allTorrents;
 };
