@@ -20,22 +20,22 @@ Status legend: ✅ working, ⚠️ no results for the probe query, ❌ failed/ti
 <!-- STATUS_TABLE_START -->
 | Provider | Status | Results | Latency |
 |----------|--------|---------|---------|
-| 1337x | ⚠️ | 0 | 109ms |
-| Bitsearch | ⚠️ | 0 | 78ms |
-| Ettv | ⚠️ | 0 | 548ms |
-| Eztv | ⚠️ | 0 | 85ms |
-| Glodls | ⚠️ | 0 | 745ms |
-| Kickass | ⚠️ | 0 | 82ms |
-| Limetorrents | ⚠️ | 0 | 118ms |
-| Magnetdl | ⚠️ | 0 | 88ms |
-| Nyaasi | ✅ | 75 | 462ms |
-| Piratebay | ⚠️ | 0 | 118ms |
+| 1337x | ⚠️ | 0 | 106ms |
+| Bitsearch | ⚠️ | 0 | 86ms |
+| Ettv | ⚠️ | 0 | 321ms |
+| Eztv | ⚠️ | 0 | 84ms |
+| Glodls | ⚠️ | 0 | 1050ms |
+| Kickass | ⚠️ | 0 | 88ms |
+| Limetorrents | ⚠️ | 0 | 134ms |
+| Magnetdl | ⚠️ | 0 | 90ms |
+| Nyaasi | ✅ | 75 | 450ms |
+| Piratebay | ⚠️ | 0 | 140ms |
 | Rarbg | ⚪ | 0 | 0ms |
-| Torlock | ⚠️ | 0 | 14814ms |
-| Torrentfunk | ⚠️ | 0 | 158ms |
-| Torrentgalaxy | ⚠️ | 0 | 141ms |
-| Torrentproject | ⚠️ | 0 | 604ms |
-| Zooqle | ⚠️ | 0 | 187ms |
+| Torlock | ✅ | 104 | 6664ms |
+| Torrentfunk | ⚠️ | 0 | 149ms |
+| Torrentgalaxy | ⚠️ | 0 | 131ms |
+| Torrentproject | ⚠️ | 0 | 854ms |
+| Zooqle | ⚠️ | 0 | 167ms |
 <!-- STATUS_TABLE_END -->
 
 ## Getting Started
